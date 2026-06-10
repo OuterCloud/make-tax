@@ -1135,14 +1135,49 @@ def generate_report(
     lines.append(f"     (H股分红10%税由企业代扣代缴，属于已缴国内个税)")
     lines.append("")
 
-    lines.append("5. 最终应缴税额:")
-    lines.append(f"   方案A (分国别): {s['actual_tax_separate']:.2f} CNY")
-    lines.append(f"   方案B (合并):   {s['actual_tax_combined']:.2f} CNY")
+    lines.append("-" * 70)
+    lines.append("五、个税App申报填写参考")
+    lines.append("-" * 70)
     lines.append("")
 
-    # ============ 四、备注 ============
+    # 计算分栏数据
+    dividend_tax_gross = s['total_dividend_cny'] * TAX_RATE
+    dividend_credit = s['actual_credit'] + s['hshare_tax_credit']
+    dividend_tax_net = max(0, dividend_tax_gross - dividend_credit)
+    capital_tax_a = s['tax_capital_gains_separate']
+    capital_tax_b = s['tax_capital_gains_combined']
+
+    lines.append("┌─────────────────────────────────────────────────────────────────┐")
+    lines.append("│ 栏目：财产转让所得                                              │")
+    lines.append("├─────────────────────────────────────────────────────────────────┤")
+    lines.append(f"│  应纳税所得额 (方案A): {s['hk_gains_taxable'] + s['us_gains_taxable']:>12.2f} CNY              │")
+    lines.append(f"│  应纳税所得额 (方案B): {s['total_gains_taxable']:>12.2f} CNY              │")
+    lines.append(f"│  应纳税额     (方案A): {capital_tax_a:>12.2f} CNY              │")
+    lines.append(f"│  应纳税额     (方案B): {capital_tax_b:>12.2f} CNY              │")
+    lines.append(f"│  境外已缴税额:                0.00 CNY (资本利得无预扣税)  │")
+    lines.append("└─────────────────────────────────────────────────────────────────┘")
+    lines.append("")
+    lines.append("┌─────────────────────────────────────────────────────────────────┐")
+    lines.append("│ 栏目：利息、股息、红利所得                                      │")
+    lines.append("├─────────────────────────────────────────────────────────────────┤")
+    lines.append(f"│  应纳税所得额:         {s['total_dividend_cny']:>12.2f} CNY              │")
+    lines.append(f"│  应纳税额:             {dividend_tax_gross:>12.2f} CNY              │")
+    lines.append(f"│  境外已缴税额:         {s['foreign_tax_credit_cny']:>12.2f} CNY (美股预扣税)     │")
+    lines.append(f"│  H股已缴税(国内代扣):  {s['hshare_tax_credit']:>12.2f} CNY              │")
+    lines.append(f"│  实际应补缴:           {dividend_tax_net:>12.2f} CNY              │")
+    lines.append("└─────────────────────────────────────────────────────────────────┘")
+    lines.append("")
+    lines.append("┌─────────────────────────────────────────────────────────────────┐")
+    lines.append("│ 合计实际应缴                                                    │")
+    lines.append("├─────────────────────────────────────────────────────────────────┤")
+    lines.append(f"│  方案A (分国别): {s['actual_tax_separate']:>12.2f} CNY                       │")
+    lines.append(f"│  方案B (合并):   {s['actual_tax_combined']:>12.2f} CNY                       │")
+    lines.append("└─────────────────────────────────────────────────────────────────┘")
+    lines.append("")
+
+    # ============ 备注 ============
     lines.append("-" * 70)
-    lines.append("四、重要说明")
+    lines.append("六、重要说明")
     lines.append("-" * 70)
     lines.append("")
     lines.append("1. 本报告仅供参考，不构成税务建议。实际申报请咨询专业税务顾问。")
