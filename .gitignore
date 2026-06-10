@@ -1,0 +1,20 @@
+# 数据文件（含个人财务信息）
+*.xlsx
+*.pdf
+
+# 输出报告
+output/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
